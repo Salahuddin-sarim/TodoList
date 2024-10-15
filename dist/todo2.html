@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo-List</title>
+    <link rel="stylesheet" href="/src/output.css" />
+    <!-- npx tailwindcss -i ./dist/style.css -o ./src/output.css --watch -->
+    <style>
+      /* span {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+        /* line-height: 40px; */
+      /* text-align: center; */
+      /* color: black; */
+      /* margin-left: 50px; */
+      /* margin-right: 10px; */
+      /* } */
+    </style>
+  </head>
+  <body class="h-screen bg-[#845bb3] flex justify-center flex-col items-center">
+    <h1 class="font-bold text-6xl m-2">Todo-List</h1>
+    <div>
+      <div>
+        <input
+          type="text"
+          class="inputbox cursor-pointer p-2 items-center"
+          placeholder="Add your items"
+        />
+        <button class="btn bg-black text-white p-2">Add Items</button>
+      </div>
+      <div class="listcontainer hover:cursor-pointer"></div>
+    </div>
+    <script>
+      const button = document.querySelector(".btn");
+      const inputbox = document.querySelector(".inputbox");
+      const listcontainer = document.querySelector(".listcontainer");
+      let todoarr=[];
+       
+ const addtols=(todo)=>{
+   return localStorage.setItem("todoList", JSON.stringify(todo));
+  };
+
+  const getfromls=()=>{
+    return JSON.parse(localStorage.getItem("todoList")) ||  [];
+  };
+
+  function showtodo(){
+    todoarr=getfromls();
+    todoarr.forEach( (currtodo)=> {
+      let li = document.createElement("li");
+        li.innerHTML = currtodo;
+        listcontainer.appendChild(li);
+      
+    });
+
+  };
+
+      function addtolist() {
+
+        todoarr = getfromls();
+        let todovalue = inputbox.value.trim();
+         if(todovalue.length !== 0 && !todoarr.includes(todovalue)){
+
+          todoarr.push(todovalue);
+          addtols(todoarr);
+
+          let li = document.createElement("li");
+        li.innerHTML = todovalue;
+        listcontainer.appendChild(li);
+       
+        
+        inputbox.value="";
+
+         };
+      }
+
+      showtodo();
+
+
+      function removelist(e) {
+          console.log(e.target);
+          // console.log(e.target.textContent);
+          e.target.remove();
+
+          updatedlist = todoarr.filter(
+            (curval) => curval !== e.target.textContent
+          );
+
+        addtols(updatedlist);
+
+
+
+      };
+
+      button.addEventListener("click", () => {
+        addtolist();
+      });
+
+      listcontainer.addEventListener("click", (e) => {
+        removelist(e);
+      });
+    </script>
+  </body>
+</html>
